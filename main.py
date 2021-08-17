@@ -44,7 +44,7 @@ def update_time():
 
 def main():
     print(banner1)
-    print(Fore.GREEN + "\t\t\t\t\t\t\tLoading...")
+    print(Fore.GREEN + "\t\t\t\t\t\t   Loading...")
 
 
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
@@ -57,7 +57,9 @@ async def on_ready():
     await bot.change_presence(activity=activity)
     system("cls")
     print(banner1)
-    print("\t\t\t\t\t Started Selfbot as: " + bot.user.name)
+    print()
+    print(Fore.RED + "\t\t\t\t\t    Started Selfbot as: " + str(bot.user))
+    print(Fore.CYAN + "\t\t\t\t\t\t discord.gg/toolstown")
 
 
 @bot.command()
@@ -89,6 +91,7 @@ async def admin(ctx):
     embed.add_field(name="Create Role", value=f"{prefix}create_role [name]", inline=True)
     embed.add_field(name="Give Role", value=f"{prefix}give_role [user] [role]", inline=True)
     embed.add_field(name="Change Nick", value=f"{prefix}nick name [optional user]", inline=True)
+    embed.add_field(name="Clear a chosen amount of messages", value=f"{prefix}clear [amount]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
 
@@ -106,7 +109,7 @@ async def ban(ctx, user: discord.Member = "", *, reason=None):
         return
     try:
         await ctx.guild.ban(user=user, reason=reason)
-        embed = discord.Embed(title=f"Created {user} succesfully", color=color)
+        embed = discord.Embed(title=f"Created {user} successfully", color=color)
         await ctx.send(embed=embed)
     except:
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
@@ -127,7 +130,7 @@ async def kick(ctx, user: discord.Member, *, reason=None):
     else:
         try:
             await ctx.guild.kick(user=user, reason=reason)
-            embed = discord.Embed(title=f"Kicked {user} succesfully", color=color)
+            embed = discord.Embed(title=f"Kicked {user} successfully", color=color)
             await ctx.send(embed=embed)
         except:
             embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
@@ -143,7 +146,7 @@ async def create_text_channel(ctx, name=""):
         return
     try:
         await ctx.guild.create_text_channel(name=name)
-        embed = discord.Embed(title=f"Created {name} succesfully", color=color)
+        embed = discord.Embed(title=f"Created {name} successfully", color=color)
         await ctx.send(embed=embed)
     except:
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
@@ -159,7 +162,7 @@ async def create_voice_channel(ctx, name=""):
         return
     try:
         await ctx.guild.create_voice_channel(name=name)
-        embed = discord.Embed(title=f"Created {name} succesfully", color=color)
+        embed = discord.Embed(title=f"Created {name} successfully", color=color)
         await ctx.send(embed=embed)
     except:
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
@@ -175,7 +178,7 @@ async def create_role(ctx, name=""):
         return
     try:
         await ctx.guild.create_role(name=name)
-        embed = discord.Embed(title=f"Created {name} succesfully", color=color)
+        embed = discord.Embed(title=f"Created {name} successfully", color=color)
         await ctx.send(embed=embed)
     except:
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
@@ -228,10 +231,59 @@ async def fun(ctx):
                           color=color,
                           timestamp=datetime.datetime.utcnow())
     embed.add_field(name="Flip a Coin:coin:", value=f"{prefix}flip", inline=True)
-    embed.add_field(name="Blackjack:black_joker:", value=f"{prefix}bj", inline=True)
-    embed.add_field(name="Roll a Dice", value=f"{prefix}dice", inline=True)
+    embed.add_field(name="Roll a Dice:1234:", value=f"{prefix}dice", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
+
+
+# flip a coin
+@bot.command()
+async def flip(ctx, choice=""):
+    await ctx.message.delete()
+    if choice == "head" or choice == "tails" or choice != "":
+        embed = discord.Embed(description=f"You choose {choice}", color=color)
+        sign = await ctx.send(embed=embed)
+        flipped = random.choice(["Head", "Tails"])
+        load = ""
+        for i in range(3):
+            time.sleep(1)
+            load += "."
+            processing = discord.Embed(description=f"You choose {choice}", color=color)
+            processing.add_field(name="Flipping", value=load)
+            await sign.edit(embed=processing)
+        if choice == "head" and flipped == "Head":
+            end = discord.Embed(description="You win! :grin:", color=color)
+            end.add_field(name="Coin landed on Head", value=f"You choose {choice}")
+        elif choice == "tails" and flipped == "Tails":
+            end = discord.Embed(description="You win! :grin:", color=color)
+            end.add_field(name="Coin landed on Tails", value=f"You choose {choice}")
+        else:
+            end = discord.Embed(description="You loose!:sob:", color=color)
+            end.add_field(name=f"Coin landed on {flipped}", value=f"You choose {choice}")
+        await sign.edit(embed=end)
+        return
+    else:
+        embed = discord.Embed(title=f"Use command like this: {prefix}flip head/tails", colour=color)
+        await ctx.send(embed=embed)
+
+
+# roll a dice
+@bot.command()
+async def dice(ctx):
+    await ctx.message.delete()
+    roll = random.randint(0, 5)
+    numbers = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
+    embed = discord.Embed(description=f"Rolling the dice:1234:", color=color)
+    sign = await ctx.send(embed=embed)
+    load = ""
+    for i in range(3):
+        time.sleep(1)
+        load += "."
+        processing = discord.Embed(description=f"Rolling the dice:1234:", color=color)
+        processing.add_field(name="Rolling", value=load)
+        await sign.edit(embed=processing)
+    end = discord.Embed(description=f"Dice rolled on: {numbers[roll]}", color=color)
+    await sign.edit(embed=end)
 
 
 # Utility
@@ -243,11 +295,10 @@ async def utility(ctx):
                           timestamp=datetime.datetime.utcnow())
     embed.add_field(name="Webhookspammer", value=f"{prefix}webspam [webhook] [count] [message]", inline=True)
     embed.add_field(name="Nuke:bomb:", value=f"{prefix}test (to hide the command)", inline=True)
-    embed.add_field(name="Nitro Snipe", value=f"{prefix}snipe", inline=True)
-    embed.add_field(name="Generate random Nitro Codes", value=f"{prefix}gen [webhook] [count]", inline=True)
+    embed.add_field(name="Not Working Nitro Snipe", value=f"{prefix}snipe", inline=True)
+    embed.add_field(name="Send random Nitro Codes to a webhook", value=f"{prefix}gen [webhook] [count]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
-
 
 # WEBHOOK NITRO
 @bot.command()
@@ -337,28 +388,31 @@ async def webspam(ctx, webhook="", count: int = 0, *, message):
 
 
 # NUKE
-def nuke_ui():
-    print(Fore.CYAN + "Commands:")
-    print(Fore.MAGENTA + f"""|nuke / spam / role_spam /clear  |
-    |ping_spam / mass_kick / mass_ban|
-    |stop                              |""")
-    print("Log:")
-    for event in log:
-        print(event)
 
 
+blank = "\t\t\t\t\t"
+blank1 = "\t\t\t\t    "
+
+
+# Activate Nuke
 @bot.command()
 async def test(ctx):
-    global nuke
-    await ctx.message.delete()
-    for i in range(2):
+    global nuker
+    if not nuker:
+        await ctx.message.delete()
         print("\n")
-    print(Fore.GREEN + "Activated Nuke mode hehe")
-    print(Fore.CYAN + "Commands:")
-    print(Fore.MAGENTA + f"""|nuke / spam / role_spam /clear  |
-    |ping_spam / mass_kick / mass_ban|
-    |stop / clear_log                    |""")
-    nuke = True
+        print(Fore.GREEN + blank + "     Activated Nuke mode hehe")
+        print(Fore.CYAN + blank + "\t    Commands:")
+        print(Fore.MAGENTA + blank + "----------------------------------")
+        print(blank + f"|nuke / spam / role_spam /clear  |")
+        print(blank + "|ping_spam / mass_kick / mass_ban|")
+        print(blank + "|stop                            |")
+        print(blank + "----------------------------------")
+        print(blank + "\t      Log:")
+        print(Fore.BLUE + "\t\t\t\t" + "    -------------------------------------------")
+        nuker = True
+    else:
+        await ctx.message.delete()
 
 
 # Nuke:)
@@ -366,17 +420,20 @@ async def test(ctx):
 async def nuke(ctx):
     global stop
     if nuker:
-        print(Fore.BLUE + f"[{update_time()}] Nuke attack started hehe")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Nuke attack started hehe")
         await ctx.message.delete()
-        for i in range(5):
-            await ctx.message.channel.create_invite(max_age=300)
-        print(Fore.BLUE + f"[{update_time()}] Created invites!")
         for role in ctx.message.guild.roles:
             try:
                 await role.delete()
             except:
                 pass
-        print(Fore.BLUE + f"[{update_time()}] Deleted all roles!")
+        for emoji in ctx.message.guild.emojis:
+            try:
+                await emoji.delete()
+            except:
+                pass
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Deleted all emojis!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Deleted all roles!")
         for member in ctx.message.guild.members:
             try:
                 await member.edit(nick="nuked lmao")
@@ -393,19 +450,22 @@ async def nuke(ctx):
             if not stop:
                 stop = True
                 break
-        print(Fore.BLUE + f"[{update_time()}] Deleted all channels")
-        print(Fore.BLUE + f"[{update_time()}] Creating channels")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Deleted all channels")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Creating channels")
         while True and stop:
             await ctx.message.guild.create_text_channel("nuked by github.com/screamz2k")
             await ctx.message.guild.create_voice_channel("discord.gg/toolstown")
         else:
             stop = True
+    else:
+        await ctx.message.delete()
+        print(Fore.RED + blank + f"You need to type {prefix}test first")
 
 
 # Delete all channels
 @bot.command()
 async def clear(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
         for channel in ctx.message.guild.channels:
@@ -415,16 +475,16 @@ async def clear(ctx):
                 break
         ch = await ctx.message.guild.create_text_channel("finished")
         await ch.send("Cleared successfully")
-        print(Fore.BLUE + f"[{update_time()}] Cleared successfully")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Cleared successfully")
 
 
 # Spam every channel
 @bot.command()
 async def spam(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
-        print(Fore.BLUE + f"[{update_time()}] Started spamming!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Started spamming!")
         for channel in ctx.message.guild.text_channels:
             if not stop:
                 stop = True
@@ -434,7 +494,7 @@ async def spam(ctx):
             for i in range(10):
                 await channel.send("got nuked lmao @everyone")
                 await channel.send(spam_msg)
-        print(Fore.BLUE + f"[{update_time()}] Restarting Spam!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Restarting Spam!")
         for channel in ctx.message.guild.text_channels:
             if not stop:
                 stop = True
@@ -444,16 +504,16 @@ async def spam(ctx):
             for i in range(10):
                 await channel.send("got nuked lmao @everyone")
                 await channel.send(spam_msg)
-        print(Fore.BLUE + f"[{update_time()}] Stopped spamming!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Stopped spamming!")
 
 
 # Spam pings
 @bot.command()
 async def ping_spam(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
-        print(Fore.BLUE + f"[{update_time()}] Started pinging!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Started pinging!")
         for channel in ctx.message.guild.channels:
             if not stop:
                 stop = True
@@ -470,15 +530,16 @@ async def ping_spam(ctx):
                 continue
             for i in range(10):
                 await channel.send("@everyone @here")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Stopped pinging!")
 
 
 # Spam roles
 @bot.command()
 async def role_spam(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
-        print(Fore.BLUE + f"[{update_time()}] Started mass creating roles")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Started mass creating roles")
         while True and stop:
             await ctx.message.guild.create_role(name="screamz2k", colour=discord.Colour.blue())
         else:
@@ -488,10 +549,10 @@ async def role_spam(ctx):
 # Ban all members
 @bot.command()
 async def mass_ban(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
-        print(Fore.BLUE + f"[{update_time()}] Started mass banning!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Started mass banning!")
         count = 0
         for user in ctx.message.guild.members:
             if user == ctx.message.author:
@@ -504,16 +565,16 @@ async def mass_ban(ctx):
             if not stop:
                 stop = True
                 break
-        print(Fore.BLUE + f"[{update_time()}] Successfully kicked {count} members")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Successfully banned {count} members")
 
 
 # Kick all members
 @bot.command()
 async def mass_kick(ctx):
-    if nuke:
+    if nuker:
         global stop
         await ctx.message.delete()
-        print(Fore.BLUE + f"[{update_time()}] Started mass kicking!")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Started mass kicking!")
         count = 0
         for user in ctx.message.guild.members:
             if user == ctx.message.author:
@@ -526,7 +587,7 @@ async def mass_kick(ctx):
             if not stop:
                 stop = True
                 break
-            print(Fore.BLUE + f"[{update_time()}] Successfully kicked {count} members")
+        print(Fore.BLUE + blank1 + f"[{update_time()}] Successfully kicked {count} members")
 
 
 @bot.command()
@@ -534,7 +595,7 @@ async def stop(ctx):
     global stop
     await ctx.message.delete()
     stop = False
-    print(Fore.BLUE + f"[{update_time()}] Stopped current operation")
+    print(Fore.BLUE + blank1 + f"[{update_time()}] Stopped current operation")
 
 
 main()
