@@ -1,4 +1,3 @@
-import datetime
 import json
 import requests
 import time
@@ -11,7 +10,7 @@ import discord
 from colorama import Fore, init
 from discord.ext import commands
 
-system("title " + "SCREAMZ SELFBOT [github.com/screamz2k]")
+system("title " + "SCREAMZ SNIPER [github.com/screamz2k]")
 banner1 = (Fore.BLUE + """
 \t\t\t\t.|'''|                                              
 \t\t\t\t||                                                  
@@ -38,7 +37,7 @@ nuker = False
 
 
 def update_time():
-    now = datetime.now()
+    now = datetime.datetime.now()
     current_time = now.strftime("%H:%M")
     return current_time
 
@@ -100,7 +99,7 @@ async def ban(ctx, user: discord.Member = "", *, reason=None):
     if user == ctx.message.author:
         embed = discord.Embed(title="You cant ban urself dumbo!", colour=color)
         await ctx.send(embed=embed)
-        pass
+        return
     if user == "":
         embed = discord.Embed(title=f"Use command like this: {prefix}ban @test smells bad", colour=color)
         await ctx.send(embed=embed)
