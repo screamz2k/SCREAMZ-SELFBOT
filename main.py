@@ -91,7 +91,7 @@ async def admin(ctx):
     embed.add_field(name="Create Role", value=f"{prefix}create_role [name]", inline=True)
     embed.add_field(name="Give Role", value=f"{prefix}give_role [user] [role]", inline=True)
     embed.add_field(name="Change Nick", value=f"{prefix}nick name [optional user]", inline=True)
-    embed.add_field(name="Clear a chosen amount of messages", value=f"{prefix}clear [amount]", inline=True)
+    embed.add_field(name="Delete a chosen amount of messages", value=f"{prefix}delete [amount]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
 
@@ -223,6 +223,22 @@ async def nick(ctx, user: discord.Member = None, *, name=""):
         await ctx.send(embed=embed)
 
 
+# Delete
+@bot.command()
+async def delete(ctx, amount: int = 0):
+    if amount == 0:
+        embed = discord.Embed(title=f"Use command like this: {prefix}delete 50", colour=color)
+        await ctx.send(embed=embed)
+        return
+    try:
+        await ctx.channel.purge(limit=amount)
+    except:
+        embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
+        await ctx.send(embed=embed)
+    embed = discord.Embed(description=f"Deleted {amount} succesfully", color=color)
+    await ctx.send(embed=embed)
+
+
 # Fun
 @bot.command()
 async def fun(ctx):
@@ -299,6 +315,7 @@ async def utility(ctx):
     embed.add_field(name="Send random Nitro Codes to a webhook", value=f"{prefix}gen [webhook] [count]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
+
 
 # WEBHOOK NITRO
 @bot.command()
