@@ -235,71 +235,9 @@ async def delete(ctx, amount: int = 0):
     except:
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
         await ctx.send(embed=embed)
-    embed = discord.Embed(description=f"Deleted {amount} succesfully", color=color)
-    await ctx.send(embed=embed)
-
-
-# Fun
-@bot.command()
-async def fun(ctx):
-    embed = discord.Embed(title="Fun",
-                          description="https://github.com/screamz2k",
-                          color=color,
-                          timestamp=datetime.datetime.utcnow())
-    embed.add_field(name="Flip a Coin:coin:", value=f"{prefix}flip", inline=True)
-    embed.add_field(name="Roll a Dice:1234:", value=f"{prefix}dice", inline=True)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
-    await ctx.message.channel.send(embed=embed)
-
-
-# flip a coin
-@bot.command()
-async def flip(ctx, choice=""):
-    await ctx.message.delete()
-    if choice == "head" or choice == "tails" or choice != "":
-        embed = discord.Embed(description=f"You choose {choice}", color=color)
-        sign = await ctx.send(embed=embed)
-        flipped = random.choice(["Head", "Tails"])
-        load = ""
-        for i in range(3):
-            time.sleep(1)
-            load += "."
-            processing = discord.Embed(description=f"You choose {choice}", color=color)
-            processing.add_field(name="Flipping", value=load)
-            await sign.edit(embed=processing)
-        if choice == "head" and flipped == "Head":
-            end = discord.Embed(description="You win! :grin:", color=color)
-            end.add_field(name="Coin landed on Head", value=f"You choose {choice}")
-        elif choice == "tails" and flipped == "Tails":
-            end = discord.Embed(description="You win! :grin:", color=color)
-            end.add_field(name="Coin landed on Tails", value=f"You choose {choice}")
-        else:
-            end = discord.Embed(description="You loose!:sob:", color=color)
-            end.add_field(name=f"Coin landed on {flipped}", value=f"You choose {choice}")
-        await sign.edit(embed=end)
         return
-    else:
-        embed = discord.Embed(title=f"Use command like this: {prefix}flip head/tails", colour=color)
-        await ctx.send(embed=embed)
-
-
-# roll a dice
-@bot.command()
-async def dice(ctx):
-    await ctx.message.delete()
-    roll = random.randint(0, 5)
-    numbers = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
-    embed = discord.Embed(description=f"Rolling the dice:1234:", color=color)
-    sign = await ctx.send(embed=embed)
-    load = ""
-    for i in range(3):
-        time.sleep(1)
-        load += "."
-        processing = discord.Embed(description=f"Rolling the dice:1234:", color=color)
-        processing.add_field(name="Rolling", value=load)
-        await sign.edit(embed=processing)
-    end = discord.Embed(description=f"Dice rolled on: {numbers[roll]}", color=color)
-    await sign.edit(embed=end)
+    embed = discord.Embed(description=f"Deleted {amount} successfully", color=color)
+    await ctx.send(embed=embed)
 
 
 # Utility
@@ -613,6 +551,183 @@ async def stop(ctx):
     await ctx.message.delete()
     stop = False
     print(Fore.BLUE + blank1 + f"[{update_time()}] Stopped current operation")
+
+
+# Fun
+@bot.command()
+async def fun(ctx):
+    embed = discord.Embed(title="Fun",
+                          description="https://github.com/screamz2k",
+                          color=color,
+                          timestamp=datetime.datetime.utcnow())
+    embed.add_field(name="Flip a Coin:coin:", value=f"{prefix}flip", inline=True)
+    embed.add_field(name="Roll a Dice:1234:", value=f"{prefix}dice", inline=True)
+    embed.add_field(name="Anime", value=f"{prefix}anime", inline=True)
+    embed.add_field(name="Cat:cat:", value=f"{prefix}cat", inline=True)
+    embed.add_field(name="Dog:dog:", value=f"{prefix}dog", inline=True)
+    embed.add_field(name="Duck :duck:", value=f"{prefix}duck", inline=True)
+    embed.add_field(name="Fox :fox:", value=f"{prefix}fox", inline=True)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
+    await ctx.message.channel.send(embed=embed)
+
+
+# flip a coin
+@bot.command()
+async def flip(ctx, choice=""):
+    await ctx.message.delete()
+    if choice == "head" or choice == "tails" or choice != "":
+        embed = discord.Embed(description=f"You choose {choice}", color=color)
+        sign = await ctx.send(embed=embed)
+        flipped = random.choice(["Head", "Tails"])
+        load = ""
+        for i in range(3):
+            time.sleep(1)
+            load += "."
+            processing = discord.Embed(description=f"You choose {choice}", color=color)
+            processing.add_field(name="Flipping", value=load)
+            await sign.edit(embed=processing)
+        if choice == "head" and flipped == "Head":
+            end = discord.Embed(description="You win! :grin:", color=color)
+            end.add_field(name="Coin landed on Head", value=f"You choose {choice}")
+        elif choice == "tails" and flipped == "Tails":
+            end = discord.Embed(description="You win! :grin:", color=color)
+            end.add_field(name="Coin landed on Tails", value=f"You choose {choice}")
+        else:
+            end = discord.Embed(description="You loose!:sob:", color=color)
+            end.add_field(name=f"Coin landed on {flipped}", value=f"You choose {choice}")
+        await sign.edit(embed=end)
+        return
+    else:
+        embed = discord.Embed(title=f"Use command like this: {prefix}flip head/tails", colour=color)
+        await ctx.send(embed=embed)
+
+
+# roll a dice
+@bot.command()
+async def dice(ctx):
+    await ctx.message.delete()
+    roll = random.randint(0, 5)
+    numbers = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
+    embed = discord.Embed(description=f"Rolling the dice:1234:", color=color)
+    sign = await ctx.send(embed=embed)
+    load = ""
+    for i in range(3):
+        time.sleep(1)
+        load += "."
+        processing = discord.Embed(description=f"Rolling the dice:1234:", color=color)
+        processing.add_field(name="Rolling", value=load)
+        await sign.edit(embed=processing)
+    end = discord.Embed(description=f"Dice rolled on: {numbers[roll]}", color=color)
+    await sign.edit(embed=end)
+
+
+# anime
+@bot.command()
+async def anime(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(title="Anime",
+                          description="https://github.com/screamz2k",
+                          color=color,
+                          timestamp=datetime.datetime.utcnow())
+    embed.add_field(name="sfw", value=f"{prefix}sfw [category]", inline=False)
+    embed.add_field(name="sfw category", value=f"""
+waifu, neko ,shinobu
+megumin, bully, cuddle
+cry, hug, awoo
+kiss, lick, pat
+smug, bonk, yeet
+blush, smile, wave
+highfive, handhold, nom
+bite, glomp, slap
+kill, kick, happy
+wink, poke, dance
+cringe""", inline=False)
+    embed.add_field(name="nsfw", value=f"{prefix}nsfw [category]", inline=False)
+    embed.add_field(name="nsfw category", value="""waifu
+neko, trap, blowjob""", inline=False)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
+    await ctx.message.channel.send(embed=embed)
+
+
+@bot.command()
+async def sfw(ctx, category, amount=0):
+    await ctx.message.delete()
+    if amount == 0:
+        picture = requests.get("https://api.waifu.pics/sfw/" + category)
+        embed = discord.Embed(description="Here you go!", colour=color)
+        embed.set_image(url=picture.json()["url"])
+        embed.set_footer(text=f"Requested by {ctx.message.author.name}")
+        await ctx.send(embed=embed)
+    elif amount <= 5:
+        for i in range(amount):
+            picture = requests.get("https://api.waifu.pics/sfw/" + category)
+            embed = discord.Embed(colour=color)
+            embed.set_image(url=picture.json()["url"])
+            embed.set_footer(text=f"Requested by {ctx.message.author.name}")
+            await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(description="Max amount is 5!", colour=discord.Colour.red())
+        embed.set_footer(text=f"Requested by {ctx.message.author.name}")
+        await ctx.send(embed=embed)
+
+
+@bot.command()
+async def nsfw(ctx, category, amount=0):
+    await ctx.message.delete()
+    if amount == 0:
+        picture = requests.get("https://api.waifu.pics/nsfw/" + category)
+        embed = discord.Embed(description="Here you go!", colour=color)
+        embed.set_image(url=picture.json()["url"])
+        await ctx.send(embed=embed)
+    elif amount <= 5:
+        for i in range(amount):
+            picture = requests.get("https://api.waifu.pics/nsfw/" + category)
+            embed = discord.Embed(colour=color)
+            embed.set_image(url=picture.json()["url"])
+            await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(description="Max amount is 5!", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+
+
+# cat
+@bot.command()
+async def cat(ctx):
+    await ctx.message.delete()
+    picture = requests.get("https://thatcopy.pw/catapi/rest/")
+    embed = discord.Embed(description=":cat:", colour=color)
+    embed.set_image(url=picture.json()["url"])
+    await ctx.send(embed=embed)
+
+
+# duck
+@bot.command()
+async def duck(ctx):
+    await ctx.message.delete()
+    picture = requests.get("https://random-d.uk/api/random")
+    embed = discord.Embed(description=":duck:", colour=color)
+    embed.set_image(url=picture.json()["url"])
+    await ctx.send(embed=embed)
+
+
+# dog
+@bot.command()
+async def dog(ctx):
+    await ctx.message.delete()
+    picture = requests.get("https://random.dog/woof.json")
+    embed = discord.Embed(description=":dog:", colour=color)
+    embed.set_image(url=picture.json()["url"])
+    await ctx.send(embed=embed)
+
+
+# fox
+@bot.command()
+async def fox(ctx):
+    await ctx.message.delete()
+    picture = requests.get("https://randomfox.ca/floof/")
+    embed = discord.Embed(description=":fox:", colour=color)
+    embed.set_image(url=picture.json()["image"])
+    await ctx.send(embed=embed)
 
 
 main()
