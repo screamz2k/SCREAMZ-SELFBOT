@@ -1,11 +1,13 @@
 import json
+import pypresence
+from pypresence import *
 import requests
 import time
 import datetime
 import random
 import string
+from pynotifier import Notification
 from os import system
-
 import discord
 from colorama import Fore, init
 from discord.ext import commands
@@ -30,6 +32,7 @@ init()
 # config
 color = 1752220
 log = []
+avatar = "https://avatars.githubusercontent.com/u/78593516?v=4"
 
 # Global vars
 stop = True
@@ -47,19 +50,35 @@ def main():
     print(Fore.GREEN + "\t\t\t\t\t\t   Loading...")
 
 
+RPC = Presence(881636940103974943)
+RPC.connect()
+
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
 bot.remove_command("help")
+
+cur_time = int(time.time())
+RPC.update(
+    large_image="screamz",
+    large_text="SCREAMZ SELFBOT BETA",
+    details="Enjoying the benefits",
+    start=cur_time,
+    buttons=[{"label": "GITHUB", "url": "https://github.com/screamz2k/SCREAMZ-SELFBOT"}])
 
 
 @bot.event
 async def on_ready():
-    activity = discord.Game(name="SCREAMZ SELFBOT", type=3)
-    await bot.change_presence(activity=activity)
-    system("cls")
+    Notification(
+        title='SCREAMZ SELFBOT',
+        description=f'Logged in as: {bot.user}',
+        duration=5,
+        icon_path="./stuff/icon.ico",
+        urgency='normal').send()
+    system("cls ")
     print(banner1)
     print()
-    print(Fore.RED + "\t\t\t\t\t    Started Selfbot as: " + str(bot.user))
-    print(Fore.CYAN + "\t\t\t\t\t\t discord.gg/toolstown")
+    print(Fore.RED + "\t\t\t\t\t  Started Selfbot as: " + str(bot.user))
+    print(Fore.CYAN + "\t\t\t\t\t\tdiscord.gg/toolstown")
+    print(Fore.GREEN + f"\t\t\t\t\t\t Start with {prefix}help")
 
 
 @bot.command()
@@ -90,7 +109,7 @@ async def admin(ctx):
                     inline=False)
     embed.add_field(name="Create Role", value=f"{prefix}create_role [name]", inline=True)
     embed.add_field(name="Give Role", value=f"{prefix}give_role [user] [role]", inline=True)
-    embed.add_field(name="Change Nick", value=f"{prefix}nick name [optional user]", inline=True)
+    embed.add_field(name="Change Nick", value=f"{prefix}nick [user] [name]", inline=True)
     embed.add_field(name="Delete a chosen amount of messages", value=f"{prefix}delete [amount]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
@@ -236,7 +255,7 @@ async def delete(ctx, amount: int = 0):
         embed = discord.Embed(title="You don't have the right Permissions!", colour=color)
         await ctx.send(embed=embed)
         return
-    embed = discord.Embed(description=f"Deleted {amount} successfully", color=color)
+    embed = discord.Embed(title="Operation successfully!", description=f"Deleted {amount} successfully", color=color)
     await ctx.send(embed=embed)
 
 
@@ -250,8 +269,63 @@ async def utility(ctx):
     embed.add_field(name="Webhookspammer", value=f"{prefix}webspam [webhook] [count] [message]", inline=True)
     embed.add_field(name="Nuke:bomb:", value=f"{prefix}test (to hide the command)", inline=True)
     embed.add_field(name="Not Working Nitro Snipe", value=f"{prefix}snipe", inline=True)
-    embed.add_field(name="Send random Nitro Codes to a webhook", value=f"{prefix}gen [webhook] [count]", inline=True)
+    embed.add_field(name="Change activity", value=f"{prefix}activity [state]", inline=True)
+    embed.add_field(name="Get userinfo", value=f"{prefix}userinfo ")
+    embed.add_field(name="Create a random identity", value=f"{prefix}identity")
+    embed.add_field(name="Send random Nitro Codes to a webhook", value=f"{prefix}gen [webhook] [amount]", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
+    await ctx.message.channel.send(embed=embed)
+
+
+# create identity
+@bot.command()
+async def identity(ctx):
+    data = requests.get("https://randomuser.me/api/")
+    embed = discord.Embed(title="New Identity", colour=color)
+    embed.add_field(name="Name:",
+                    value=data.json()["results"][0]["name"]["title"] + " " + data.json()["results"][0]["name"][
+                        "first"] + " " + data.json()["results"][0]["name"]["last"], inline=False)
+    embed.add_field(name="Gender:", value=data.json()["results"][0]["gender"], inline=False)
+    embed.add_field(name="Age:", value=data.json()["results"][0]["dob"]["age"], inline=False)
+    embed.add_field(name="**User Details:**", value="ㅤ", inline=False)
+    embed.add_field(name="Username", value=data.json()["results"][0]["login"]["username"], inline=False)
+    embed.add_field(name="Email:", value=data.json()["results"][0]["email"], inline=False)
+    embed.add_field(name="Password", value=data.json()["results"][0]["login"]["password"], inline=False)
+    embed.add_field(name="**Location:**", value="ㅤ", inline=False)
+    embed.add_field(name="Country", value=data.json()["results"][0]["location"]["country"], inline=False)
+    embed.add_field(name="State & City",
+                    value=data.json()["results"][0]["location"]["state"] + " " + data.json()["results"][0]["location"][
+                        "city"], inline=False)
+    embed.add_field(name="Postcode", value=data.json()["results"][0]["location"]["postcode"], inline=False)
+    embed.add_field(name="Street", value=data.json()["results"][0]["location"]["street"]["name"] + " " + str(
+        data.json()["results"][0]["location"]["street"]["number"]), inline=False)
+    embed.set_image(url=data.json()["results"][0]["picture"]["large"])
+    await ctx.send(embed=embed)
+
+
+# userinfo
+@bot.command()
+async def userinfo(ctx):
+    date_format = "%a, %d %b %Y %I:%M %p"
+    embed = discord.Embed(title=bot.user,
+                          color=color,
+                          timestamp=datetime.datetime.utcnow())
+    embed.add_field(name="Full Username", value=bot.user, inline=False)
+    embed.add_field(name="User ID", value=bot.user.id, inline=False)
+    embed.add_field(name="Created at", value=bot.user.created_at.strftime(date_format), inline=False)
+    friend_count = 0
+    for friend in bot.user.friends:
+        friend_count += 1
+    embed.add_field(name="Number of Friends", value=friend_count, inline=False)
+    blocked_count = 0
+    for block in bot.user.blocked:
+        blocked_count += 1
+    embed.add_field(name="Number of Blocked", value=blocked_count, inline=False)
+    if bot.user.premium:
+        embed.add_field(name="Nitro", value=":white_check_mark:", inline=False)
+    else:
+        embed.add_field(name="Nitro", value=":x:", inline=False)
+    embed.set_thumbnail(url=bot.user.avatar_url)
     await ctx.message.channel.send(embed=embed)
 
 
@@ -300,6 +374,16 @@ async def gen(ctx, webhook="", amount=0):
     last_embed = discord.Embed(description="Nitro Gen", color=color)
     last_embed.add_field(name="Finished", value=f"Sent {amount} codes")
     await info.edit(embed=last_embed)
+
+
+# change activity
+@bot.command()
+async def activity(ctx, wanted):
+    wanted = wanted.lower()
+    if wanted == "idle" or wanted == wanted == "dnd" or wanted == "active" or wanted == "offline":
+        pass
+    else:
+        pass
 
 
 # WEBHOOK
@@ -560,11 +644,11 @@ async def fun(ctx):
                           description="https://github.com/screamz2k",
                           color=color,
                           timestamp=datetime.datetime.utcnow())
-    embed.add_field(name="Flip a Coin:coin:", value=f"{prefix}flip", inline=True)
-    embed.add_field(name="Roll a Dice:1234:", value=f"{prefix}dice", inline=True)
+    embed.add_field(name="Flip a Coin :coin:", value=f"{prefix}flip [head/tails]", inline=True)
+    embed.add_field(name="Roll a Dice :1234:", value=f"{prefix}dice", inline=True)
     embed.add_field(name="Anime", value=f"{prefix}anime", inline=True)
-    embed.add_field(name="Cat:cat:", value=f"{prefix}cat", inline=True)
-    embed.add_field(name="Dog:dog:", value=f"{prefix}dog", inline=True)
+    embed.add_field(name="Cat :cat:", value=f"{prefix}cat", inline=True)
+    embed.add_field(name="Dog :dog:", value=f"{prefix}dog", inline=True)
     embed.add_field(name="Duck :duck:", value=f"{prefix}duck", inline=True)
     embed.add_field(name="Fox :fox:", value=f"{prefix}fox", inline=True)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
@@ -574,8 +658,7 @@ async def fun(ctx):
 # flip a coin
 @bot.command()
 async def flip(ctx, choice=""):
-    await ctx.message.delete()
-    if choice == "head" or choice == "tails" or choice != "":
+    if choice.lower() == "head" or choice.lower() == "tails":
         embed = discord.Embed(description=f"You choose {choice}", color=color)
         sign = await ctx.send(embed=embed)
         flipped = random.choice(["Head", "Tails"])
@@ -605,7 +688,6 @@ async def flip(ctx, choice=""):
 # roll a dice
 @bot.command()
 async def dice(ctx):
-    await ctx.message.delete()
     roll = random.randint(0, 5)
     numbers = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
     embed = discord.Embed(description=f"Rolling the dice:1234:", color=color)
@@ -624,7 +706,6 @@ async def dice(ctx):
 # anime
 @bot.command()
 async def anime(ctx):
-    await ctx.message.delete()
     embed = discord.Embed(title="Anime",
                           description="https://github.com/screamz2k",
                           color=color,
@@ -651,12 +732,10 @@ neko, trap, blowjob""", inline=False)
 
 @bot.command()
 async def sfw(ctx, category, amount=0):
-    await ctx.message.delete()
     if amount == 0:
         picture = requests.get("https://api.waifu.pics/sfw/" + category)
         embed = discord.Embed(description="Here you go!", colour=color)
         embed.set_image(url=picture.json()["url"])
-        embed.set_footer(text=f"Requested by {ctx.message.author.name}")
         await ctx.send(embed=embed)
     elif amount <= 5:
         for i in range(amount):
@@ -673,7 +752,6 @@ async def sfw(ctx, category, amount=0):
 
 @bot.command()
 async def nsfw(ctx, category, amount=0):
-    await ctx.message.delete()
     if amount == 0:
         picture = requests.get("https://api.waifu.pics/nsfw/" + category)
         embed = discord.Embed(description="Here you go!", colour=color)
@@ -693,7 +771,6 @@ async def nsfw(ctx, category, amount=0):
 # cat
 @bot.command()
 async def cat(ctx):
-    await ctx.message.delete()
     picture = requests.get("https://thatcopy.pw/catapi/rest/")
     embed = discord.Embed(description=":cat:", colour=color)
     embed.set_image(url=picture.json()["url"])
@@ -713,7 +790,6 @@ async def duck(ctx):
 # dog
 @bot.command()
 async def dog(ctx):
-    await ctx.message.delete()
     picture = requests.get("https://random.dog/woof.json")
     embed = discord.Embed(description=":dog:", colour=color)
     embed.set_image(url=picture.json()["url"])
@@ -723,12 +799,29 @@ async def dog(ctx):
 # fox
 @bot.command()
 async def fox(ctx):
-    await ctx.message.delete()
     picture = requests.get("https://randomfox.ca/floof/")
     embed = discord.Embed(description=":fox:", colour=color)
     embed.set_image(url=picture.json()["image"])
     await ctx.send(embed=embed)
 
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        embed = discord.Embed(
+            title="Error",
+            description=f"**Command does not exist.**",
+            color=discord.Colour.red())
+        await ctx.send(embed=embed)
+
+if token == "paste bot token here" or token == "":
+    print(Fore.RED + blank1 + "You need to paste your token into the config file!!!")
+    input()
+    exit()
+
 main()
-bot.run(token, bot=False)
+try:
+    bot.run(token, bot=False)
+except:
+    print(Fore.RED + "\t\t\t\t\t     Token is invalid!")
+    input()
