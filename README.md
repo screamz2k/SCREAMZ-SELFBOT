@@ -3,8 +3,10 @@
 Selfbots are against the Discord so theres a high ban chance
 Only use on second accounts or private Servers!
 # STILL GETTING UPDATES
-## Usages
-
+## Usage
+1. Install Modules: ``pip install -r requirements.txt`.
+2. Put your token inside the ``config.json ``file.
+3. Start the program.
 ## First Release:
 ![Picture](https://cdn.discordapp.com/attachments/816951499544068116/877092553411923988/unknown.png)
 # BETA
