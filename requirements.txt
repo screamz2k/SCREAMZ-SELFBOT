@@ -1,1 +1,1 @@
-colorama, discord, requests
+colorama, discord, requests, pypresence, pynotifier
