@@ -2,7 +2,9 @@
 # VERY IMPORTANT
 Selfbots are against the Discord so theres a high ban chance
 Only use on second accounts or private Servers!
-# NOT FINISHED
+# STILL GETTING UPDATES
+## Usages
+
 ## First Release:
 ![Picture](https://cdn.discordapp.com/attachments/816951499544068116/877092553411923988/unknown.png)
 # BETA
