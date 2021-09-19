@@ -5,7 +5,7 @@ Only use on second accounts or private Servers!
 # STILL GETTING UPDATES
 ## Usage
 1. Install Modules: ``pip install -r requirements.txt``.
-2. Put your token inside the ``config.json ``file.
+2. Put your token inside the ``config.json `` file.
 3. Start the program.
 ## First Release:
 ![Picture](https://cdn.discordapp.com/attachments/816951499544068116/877092553411923988/unknown.png)
