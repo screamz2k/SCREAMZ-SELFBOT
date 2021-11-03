@@ -15,6 +15,3 @@ Only use on second accounts or private Servers!
 ![Picture](https://cdn.discordapp.com/attachments/816951499544068116/877259335699431494/unknown.png)
 ## Fun 
 ![Picture](https://cdn.discordapp.com/attachments/816951499544068116/877259426187325460/unknown.png)
-## Anime
-![image](https://user-images.githubusercontent.com/78593516/130056505-3cf86425-bbcf-4ab0-9819-97c80a4d29d7.png)
-
