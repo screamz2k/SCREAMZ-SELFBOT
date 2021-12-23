@@ -1,6 +1,5 @@
 import json
 import pypresence
-from pypresence import *
 import requests
 import time
 import datetime
@@ -50,20 +49,8 @@ def main():
     print(Fore.GREEN + "\t\t\t\t\t\t   Loading...")
 
 
-RPC = Presence(881636940103974943)
-RPC.connect()
-
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
 bot.remove_command("help")
-
-cur_time = int(time.time())
-RPC.update(
-    large_image="screamz",
-    large_text="SCREAMZ SELFBOT BETA",
-    details="Enjoying the benefits",
-    start=cur_time,
-    buttons=[{"label": "GITHUB", "url": "https://github.com/screamz2k/SCREAMZ-SELFBOT"}])
-
 
 @bot.event
 async def on_ready():
@@ -77,7 +64,7 @@ async def on_ready():
     print(banner1)
     print()
     print(Fore.RED + "\t\t\t\t\t  Started Selfbot as: " + str(bot.user))
-    print(Fore.CYAN + "\t\t\t\t\t\tdiscord.gg/toolstown")
+    print(Fore.CYAN + "\t\t\t\t\t\tScreamz.py#1118")
     print(Fore.GREEN + f"\t\t\t\t\t\t Start with {prefix}help")
 
 
