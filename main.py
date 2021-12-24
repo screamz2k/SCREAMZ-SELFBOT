@@ -1,5 +1,5 @@
 import json
-import pypresence
+from pypresence import *
 import requests
 import time
 import datetime
@@ -9,7 +9,7 @@ from pynotifier import Notification
 from os import system
 import discord
 from colorama import Fore, init
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 system("title " + "SCREAMZ SELFBOT [github.com/screamz2k]")
 banner1 = (Fore.BLUE + """
@@ -49,9 +49,28 @@ def main():
     print(Fore.GREEN + "\t\t\t\t\t\t   Loading...")
 
 
+RPC = Presence(923915111322746901)
+RPC.connect()
+
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
 bot.remove_command("help")
 
+cur_time = int(time.time())
+RPC.update(
+    large_image="screamz",
+    large_text="SCREAMZ SELFBOT BETA",
+    details="Feeling like a King.",
+    start=cur_time,
+    buttons=[{"label": "GET IT YOURSELF", "url": "https://github.com/screamz2k/SCREAMZ-SELFBOT"}])
+
+"""@tasks.loop(minutes=1)
+async def up_time():
+    with open("./stuff/infos.txt", "r") as f:
+      up = int(f.read())
+      up += 1
+    with open("./stuff/infos.txt", "w") as f:
+        f.write(up)
+up_time.start()"""
 @bot.event
 async def on_ready():
     Notification(
@@ -64,7 +83,7 @@ async def on_ready():
     print(banner1)
     print()
     print(Fore.RED + "\t\t\t\t\t  Started Selfbot as: " + str(bot.user))
-    print(Fore.CYAN + "\t\t\t\t\t\tScreamz.py#1118")
+    print(Fore.CYAN + "\t\t\t\t\t\tgithub.com/screamz2k")
     print(Fore.GREEN + f"\t\t\t\t\t\t Start with {prefix}help")
 
 
@@ -260,9 +279,39 @@ async def utility(ctx):
     embed.add_field(name="Get userinfo", value=f"{prefix}userinfo ")
     embed.add_field(name="Create a random identity", value=f"{prefix}identity")
     embed.add_field(name="Send random Nitro Codes to a webhook", value=f"{prefix}gen [webhook] [amount]", inline=True)
+    embed.add_field(name="Get the Geolocation of an IP", value=f"{prefix}geo [ip]")
+    embed.add_field(name="General Bot Info", value=f"{prefix}info")
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/876076455405187132/876733846102638642/Logo.png")
     await ctx.message.channel.send(embed=embed)
-
+# bot info
+@bot.command()
+async def info(ctx):
+    with open("./stuff/infos.txt") as f:
+        up = f.read()
+    embed = discord.Embed(title="Infos", colour=color)
+    embed.add_field(name="Ping", value=bot.latency)
+    embed.add_field(name="Use time", value=up)
+    embed.add_field(name="Author", value="https://github.com/screamz2k")
+    embed.set_thumbnail(url=avatar)
+    await ctx.send(embed=embed)
+# ip infos
+@bot.command()
+async def geo(ctx, ip=""):
+    if ip == "":
+        embed = discord.Embed(title=f"Use command like this: {prefix}geo 1.1.1.1", colour=color)
+        await ctx.send(embed=embed)
+        return
+    infos = requests.get(f"https://freegeoip.app/json/{ip}")
+    embed = discord.Embed(title="IP Geolocation", colour=color)
+    embed.add_field(name="Ip:", value=ip, inline=False)
+    embed.add_field(name="Country", value=infos.json()["country_name"] + " " + infos.json()["country_code"], inline=False)
+    embed.add_field(name="Region", value=infos.json()["region_name"], inline=False)
+    embed.add_field(name="City", value=infos.json()["city"], inline=False)
+    embed.add_field(name="Zip Code", value=infos.json()["zip_code"], inline=False)
+    latitude = infos.json()["latitude"]
+    longitude = infos.json()["longitude"]
+    await ctx.send(embed=embed)
+    await ctx.send("https://www.google.de/maps/place/" + str(latitude) + "," + str(longitude))
 
 # create identity
 @bot.command()
@@ -790,9 +839,13 @@ async def fox(ctx):
     embed = discord.Embed(description=":fox:", colour=color)
     embed.set_image(url=picture.json()["image"])
     await ctx.send(embed=embed)
+@bot.command()
+async def rickroll(ctx):
+    await ctx.message.delete()
+    await ctx.send("https://tenor.com/view/rick-roll-rick-ashley-never-gonna-give-you-up-gif-22113173")
 
 
-@bot.event
+"""@bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         embed = discord.Embed(
@@ -800,7 +853,7 @@ async def on_command_error(ctx, error):
             description=f"**Command does not exist.**",
             color=discord.Colour.red())
         await ctx.send(embed=embed)
-
+"""
 if token == "paste bot token here" or token == "":
     print(Fore.RED + blank1 + "You need to paste your token into the config file!!!")
     input()
