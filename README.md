@@ -1,4 +1,5 @@
 # SCREAMZ-SELFBOT
+# This BOT doesnt work anymore, because Discord disabled Embed for User Accs
 # VERY IMPORTANT
 Selfbots are against the Discord so theres a high ban chance
 Only use on second accounts or private Servers!
